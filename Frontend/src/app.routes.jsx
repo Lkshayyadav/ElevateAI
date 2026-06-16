@@ -16,3 +16,60 @@ const router = createBrowserRouter([
 ])
 
 export default router;
+
+import { createBrowserRouter } from "react-router";
+import Login from "./features/auth/pages/Login";
+import Register from "./features/auth/pages/Register";
+
+
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Login />
+    },
+    {
+        path: "/register",
+        element: <Register />
+    }
+])
+
+export default router;
+
+import { createBrowserRouter } from "react-router";
+import Login from "./features/auth/pages/Login";
+import Register from "./features/auth/pages/Register";
+
+
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Login />
+    },
+    {
+        path: "/register",
+        element: <Register />
+    }
+])
+
+export default router;
+
+import { createBrowserRouter } from "react-router";
+import Login from "./features/auth/pages/Login";
+import Register from "./features/auth/pages/Register";
+
+
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Login />
+    },
+    {
+        path: "/register",
+        element: <Register />
+    }
+])
+
+export default router;
