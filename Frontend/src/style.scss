@@ -1,4 +1,5 @@
-/* Universal Reset */
+@use "sass:color";
+
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +16,6 @@ body,
     background-color: #000;
     color: #fff;
 }
-
 
 .full-center {
     display: flex;

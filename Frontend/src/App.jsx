@@ -1,13 +1,11 @@
-import { RouterProvider } from "react-router";
-import router from "./app.routes";
-import { AuthProvider } from "./auth.context";
+import { AuthProvider } from './features/auth/auth.context';
+import { InterviewProvider } from './features/interview/interview.context';
+import AppRoutes from './app.routes.jsx'; // Whatever your routes file is named
 
-function App() {
+export default function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <div className="app-wrapper">
+       {/* This is now handled by RouterProvider in main.jsx */}
+    </div>
   );
 }
-
-export default App;

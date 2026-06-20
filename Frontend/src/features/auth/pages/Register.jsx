@@ -1,55 +1,79 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";   // ✅ FIXED
 import "../auth.form.scss";
 
-const Register = () => {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Register submitted");
-    };
+export default function Register() {
+  const navigate = useNavigate();
+  const { handelRegister } = useAuth();        // ✅ FIXED
+  const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
 
-    return (
-        <main>
-            <div className="form-container">
-                <h1>Register</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label htmlFor="username">Username</label>
-                        <input
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            placeholder="Enter username"
-                        />
-                    </div>
-                    <div className="input-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter email address"
-                        />
-                    </div>
-                    <div className="input-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Enter password"
-                        />
-                    </div>
-                    <button type="submit" className="primary-button">
-                        Register
-                    </button>
-                </form>
-                <p className="auth-footer">
-                    Already have an account? <Link to="/login">Login</Link>
-                </p>
-            </div>
-        </main>
-    );
-};
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-export default Register;
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const success = await handelRegister({ username: name, email, password }); // ✅ FIXED
+    if (success) {
+      navigate('/home');
+    }
+  };
+
+  return (
+    <div className={`auth-container theme-${currentTheme}`}>
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">🧬</div>
+          <h2 className="auth-title">Create account</h2>
+          <p className="auth-subtitle">Start tracking your preparation goals</p>
+        </div>
+
+        <form className="auth-form" onSubmit={handleRegister}>
+          <div className="input-group">
+            <label htmlFor="fullname">Full Name</label>
+            <input 
+              id="fullname"
+              type="text" 
+              placeholder="Alex Kumar" 
+              required 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="email">Email Address</label>
+            <input 
+              id="email"
+              type="email" 
+              placeholder="name@domain.com" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input 
+              id="password"
+              type="password" 
+              placeholder="Create strong password" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button type="submit" className="auth-btn">Get Started</button>
+        </form>
+
+        <p className="auth-footer-text">
+          Already have an account?{' '}
+          <span onClick={() => navigate('/login')}>Sign in</span>
+        </p>
+      </div>
+    </div>
+  );
+}

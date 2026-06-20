@@ -1,64 +1,66 @@
-import React from "react";
-import { useState } from "react";
-import { Link } from "react-router";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";   // ✅ FIXED - import from hooks, not context
 import "../auth.form.scss";
-import { useAuth } from "../hooks/useAuth";
 
+export default function Login() {
+  const navigate = useNavigate();
+  const { handelLogin } = useAuth();           // ✅ FIXED - use handelLogin from the hook
+  const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-const Login = () => {
- const {loading , handelLogin}= useAuth();
-
- const [email, setEmail] = useState("");
- const [password, setPassword] = useState("");
-
-
-
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    handelLogin({email,password})
-    };
-
-
-    if(!loading) {
-        return (<main><h1>Loading.....</h1></main>)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await handelLogin({ email, password });  // ✅ FIXED - await + object param
+    if (success) {
+      navigate('/home');
     }
+  };
 
-    return (
-        <main>
-            <div className="form-container">
-                <h1>Login</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label htmlFor="email">Email</label>
-                        <input onChange={(e) => {setEmail(e.target.value)}}
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter email address"
-                        />
-                    </div>
-                    <div className="input-group">
-                        <label htmlFor="password">Password</label>
-                        <input  onChange={(e) => {setPassword(e.target.value)}}
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Enter password"
-                        />
-                    </div>
-                    <button type="submit" className="primary-button">
-                        Login
-                    </button>
-                </form>
-                <p className="auth-footer">
-                    Don't have an account? <Link to="/register">Register</Link>
-                </p>
-            </div>
-        </main>
-    );
-};
+  return (
+    <div className={`auth-container theme-${currentTheme}`}>
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">🧬</div>
+          <h2 className="auth-title">Welcome back</h2>
+          <p className="auth-subtitle">Log in to your interview prep account</p>
+        </div>
 
-export default Login;
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="email">Email Address</label>
+            <input 
+              id="email"
+              type="email" 
+              placeholder="name@company.com" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input 
+              id="password"
+              type="password" 
+              placeholder="••••••••" 
+              required 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button type="submit" className="auth-btn">Sign In</button>
+        </form>
+
+        <p className="auth-footer-text">
+          Don't have an account?{' '}
+          <span onClick={() => navigate('/register')}>Sign up free</span>
+        </p>
+      </div>
+    </div>
+  );
+}

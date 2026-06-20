@@ -1,19 +1,11 @@
-import { createBrowserRouter } from "react-router";
-import Login from "./features/auth/pages/Login";
-import Register from "./features/auth/pages/Register";
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
 
-
-
-const router = createBrowserRouter([
-    {
-        path: "/Login",
-        element: <Login />
-    },
-    {
-        path: "/register",
-        element: <Register />
-    }
-])
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <h1>Router Works</h1>
+  }
+]);
 
 export default router;
-
