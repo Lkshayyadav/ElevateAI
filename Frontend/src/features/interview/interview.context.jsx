@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState } from 'react';
 
-const InterviewContext = createContext(null);
+export const InterviewContext = createContext();
 
 export const InterviewProvider = ({ children }) => {
+      const [report, setReport] = useState(null);
   const [reports, setReports] = useState([]); // Default empty array prevents crashes
   const [loading, setLoading] = useState(false);
 
   return (
-    <InterviewContext.Provider value={{ reports, loading }}>
+    <InterviewContext.Provider value={{loading, setLoading, report, setReport, reports, setReports}}>
       {children}
     </InterviewContext.Provider>
   );
@@ -20,3 +21,4 @@ export const useInterview = () => {
   }
   return context;
 };
+

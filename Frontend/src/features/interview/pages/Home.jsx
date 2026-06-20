@@ -33,13 +33,7 @@ export default function Home() {
         navigate(`/interview/${data._id}`)
         const file = resumeInputRef.current?.files[0];
 
-        if (loading) {
-            return (
-                <main className='loading-screen'>
-                    <h1>Loading your interview plan...</h1>
-                </main>
-            )
-        }
+
 
 
     };
