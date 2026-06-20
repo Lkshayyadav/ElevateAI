@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInterview } from '../hook/useInterview.js'
-import { useAuth } from '../../auth/auth.context';
+// import { useAuth } from '../../auth/auth.context';
 
 import '../styles/home.scss';
 
@@ -24,12 +24,12 @@ export default function Home() {
     // Logic for handling the generate button
     const handleGenerate = async () => {
 
-        if (!jobDescription || (!file && !description)) {
-            alert("Please provide a job description and either a resume or self-description.");
-            return;
-        }
+        // if (!jobDescription || (!file && !description)) {
+        //     alert("Please provide a job description and either a resume or self-description.");
+        //     return;
+        // }
 
-        const data = await generateReport({ jobDescription, selfDescription, resumeFile })
+        const data = await generateReport({ jobDescription, description, setFileName })
         navigate(`/interview/${data._id}`)
         const file = resumeInputRef.current?.files[0];
 

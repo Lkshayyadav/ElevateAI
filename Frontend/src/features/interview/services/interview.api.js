@@ -16,12 +16,8 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
     formData.append("selfDescription", selfDescription)
     formData.append("resume", resumeFile)
 
-    const response = await api.post("/api/interview/", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    })
-
+    const response = await api.post("/api/interview/", formData)
+console.log(response.data)
     return response.data
 
 }

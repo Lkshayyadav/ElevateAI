@@ -1,6 +1,6 @@
 import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf } from "../services/interview.api"
 import { useContext, useEffect } from "react"
-import { InterviewContext }   from  "../interview.context" 
+import {InterviewContext}   from  "../interview.context" 
 import { useParams } from "react-router"
 
 
@@ -26,8 +26,9 @@ export const useInterview = () => {
         } finally {
             setLoading(false)
         }
-
-        return response.interviewReport
+console.log(response);
+console.log(response.interviewReport)
+        return response
     }
 
     const getReportById = async (interviewId) => {
