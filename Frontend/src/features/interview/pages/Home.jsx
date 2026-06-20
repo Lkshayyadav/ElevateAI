@@ -1,8 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+import { useInterview } from '../hook/useInterview.js'
+import { useAuth } from '../../auth/auth.context';
+
 import '../styles/home.scss';
 
 export default function Home() {
+   const { loading, generateReport,reports } = useInterview()
   const navigate = useNavigate();
   const resumeInputRef = useRef(null); // Reference for the hidden file input
   const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
@@ -18,13 +22,17 @@ export default function Home() {
   ];
 
   // Logic for handling the generate button
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+     const data = await generateReport({ jobDescription, selfDescription, resumeFile })
+        navigate(`/interview/${data._id}`)
     const file = resumeInputRef.current?.files[0];
     
     if (!jobDescription || (!file && !description)) {
       alert("Please provide a job description and either a resume or self-description.");
       return;
     }
+
+   
     
     // Replace this console.log with your actual API/Hook call
     console.log("Submitting:", { jobDescription, description, file });
