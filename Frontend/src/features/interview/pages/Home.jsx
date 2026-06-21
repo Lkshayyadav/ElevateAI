@@ -14,6 +14,8 @@ export default function Home() {
     const [jobDescription, setJobDescription] = useState('');
     const [description, setDescription] = useState('');
     const [fileName, setFileName] = useState(''); // To show the uploaded filename
+    const [error, setError] = useState(''); // Error state
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const plans = [
         { role: "Frontend Developer", date: "Generated on 6/20/2026", score: "88%" },
@@ -23,19 +25,31 @@ export default function Home() {
 
     // Logic for handling the generate button
     const handleGenerate = async () => {
+        if (loading || isGenerating) return;
 
-        // if (!jobDescription || (!file && !description)) {
-        //     alert("Please provide a job description and either a resume or self-description.");
-        //     return;
-        // }
+        setError('');
+        const resumeFile = resumeInputRef.current?.files[0];
 
-        const data = await generateReport({ jobDescription, description, setFileName })
-        navigate(`/interview/${data._id}`)
-        const file = resumeInputRef.current?.files[0];
+        if (!jobDescription || (!resumeFile && !description)) {
+            setError("Please provide a job description and either a resume or self-description.");
+            return;
+        }
 
-
-
-
+        setIsGenerating(true);
+        try {
+            const data = await generateReport({ jobDescription, selfDescription: description, resumeFile });
+            if (data?._id) {
+                setError('');
+                navigate(`/interview/${data._id}`);
+            }
+        } catch (error) {
+            console.error("Generate report error:", error)
+            const responseData = error.response?.data
+            const message = responseData?.message || (typeof responseData === 'string' ? responseData : JSON.stringify(responseData)) || error.message || "Failed to generate report."
+            setError(message);
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     const handleFileChange = (e) => {
@@ -64,6 +78,17 @@ export default function Home() {
                         <h1>Create Your Custom Interview Plan</h1>
                         <p>Let our AI analyze the job requirements and your unique profile to build a winning strategy.</p>
                     </div>
+
+                    {error && (
+                        <div className="error-banner">
+                            <span className="error-icon">⚠️</span>
+                            <div>
+                                <p className="error-title">Error</p>
+                                <p className="error-message">{error}</p>
+                            </div>
+                            <button className="close-error" onClick={() => setError('')}>✕</button>
+                        </div>
+                    )}
 
                     <form className="workspace-form" onSubmit={(e) => e.preventDefault()}>
                         <div className="form-block">
@@ -109,8 +134,13 @@ export default function Home() {
                             💡 Either a <strong>Resume</strong> or a <strong>Self-Description</strong> is required to generate a personalized plan.
                         </div>
 
-                        <button type="button" className="action-submit-btn" onClick={handleGenerate}>
-                            ✨ Generate My Interview Strategy
+                        <button 
+                            type="button" 
+                            className="action-submit-btn" 
+                            onClick={handleGenerate}
+                            disabled={loading || isGenerating}
+                        >
+                            {loading || isGenerating ? '⏳ Generating...' : '✨ Generate My Interview Strategy'}
                         </button>
                     </form>
                 </main>

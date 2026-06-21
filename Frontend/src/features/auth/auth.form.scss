@@ -49,3 +49,112 @@ $gradient-btn: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
 .input-group { display: flex; flex-direction: column; gap: 0.5rem; label { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; } input { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.95rem; outline: none; transition: all 0.2s; } }
 .auth-btn { background: $gradient-btn; color: white; border: none; padding: 0.8rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); transition: all 0.2s; &:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35); } &:active { transform: translateY(0); } }
 .auth-footer-text { text-align: center; margin-top: 2rem; font-size: 0.9rem; font-weight: 500; span { font-weight: 600; cursor: pointer; text-decoration: none; &:hover { text-decoration: underline; } } }
+/* Real-time validation styles */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+  input {
+    width: 100%;
+    padding-right: 2.5rem;
+  }
+}
+
+.validation-icon {
+  position: absolute;
+  right: 0.75rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  
+  &.valid {
+    color: #22c55e;
+  }
+  
+  &.invalid {
+    color: #ef4444;
+  }
+  
+  &.medium {
+    color: #eab308;
+  }
+}
+
+.error-text {
+  font-size: 0.8rem;
+  color: #ef4444;
+  margin-top: -0.25rem;
+  font-weight: 500;
+}
+
+.password-strength {
+  margin-top: 0.5rem;
+  
+  .strength-bar {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    
+    .strength-fill {
+      height: 100%;
+      transition: all 0.3s ease;
+      
+      &.strength-weak {
+        background: #ef4444;
+      }
+      
+      &.strength-medium {
+        background: #eab308;
+      }
+      
+      &.strength-strong {
+        background: #22c55e;
+      }
+    }
+  }
+  
+  .strength-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 0;
+    
+    &.strength-weak {
+      color: #ef4444;
+    }
+    
+    &.strength-medium {
+      color: #eab308;
+    }
+    
+    &.strength-strong {
+      color: #22c55e;
+    }
+  }
+}
+
+.auth-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-container.theme-light {
+  .validation-icon.valid { color: #16a34a; }
+  .validation-icon.invalid { color: #dc2626; }
+  .validation-icon.medium { color: #ca8a04; }
+  .error-text { color: #dc2626; }
+  .password-strength {
+    .strength-bar { background: #f3f4f6; }
+    .strength-fill {
+      &.strength-weak { background: #dc2626; }
+      &.strength-medium { background: #ca8a04; }
+      &.strength-strong { background: #16a34a; }
+    }
+    .strength-text {
+      &.strength-weak { color: #dc2626; }
+      &.strength-medium { color: #ca8a04; }
+      &.strength-strong { color: #16a34a; }
+    }
+  }
+}

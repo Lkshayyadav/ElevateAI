@@ -55,14 +55,21 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     console.log("RAW RESPONSE:");
     console.log(response.text);
 
-    const parsed = JSON.parse(response.text);
+      let parsed
+    try {
+        parsed = JSON.parse(response.text)
+    } catch (parseError) {
+        console.error("AI response parse failed:", parseError)
+        console.error("AI response text:", response.text)
+        throw new Error("AI response could not be parsed as JSON. Check the model output or schema.")
+    }
 
     console.log("PARSED RESPONSE:");
     console.dir(parsed, { depth: null });
 
     return parsed;
 }
-
+    
 
 async function generatePdfFromHtml(htmlContent) {
     const browser = await puppeteer.launch({

@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";   // ✅ FIXED - import from hooks, not context
+import { useAuth } from "../hooks/useAuth";
 import "../auth.form.scss";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { handelLogin } = useAuth();           // ✅ FIXED - use handelLogin from the hook
+  const { handelLogin } = useAuth();
   const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [touched, setTouched] = useState({});
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const validations = useMemo(() => ({
+    email: isValidEmail(email),
+    password: password.length > 0
+  }), [email, password]);
+
+  const handleBlur = (field) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await handelLogin({ email, password });  // ✅ FIXED - await + object param
+    if (!validations.email || !validations.password) {
+      setTouched({ email: true, password: true });
+      return;
+    }
+
+    const success = await handelLogin({ email: email.trim().toLowerCase(), password });
     if (success) {
       navigate('/home');
     }
@@ -31,29 +48,49 @@ export default function Login() {
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email Address</label>
-            <input 
-              id="email"
-              type="email" 
-              placeholder="name@company.com" 
-              required 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div className="input-wrapper">
+              <input 
+                id="email"
+                type="email" 
+                placeholder="name@company.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => handleBlur('email')}
+              />
+              {touched.email && (
+                <span className={`validation-icon ${validations.email ? 'valid' : 'invalid'}`}>
+                  {validations.email ? '✓' : '✗'}
+                </span>
+              )}
+            </div>
+            {touched.email && !validations.email && (
+              <p className="error-text">Enter a valid email (e.g., user@company.com)</p>
+            )}
           </div>
 
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <input 
-              id="password"
-              type="password" 
-              placeholder="••••••••" 
-              required 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="input-wrapper">
+              <input 
+                id="password"
+                type="password" 
+                placeholder="••••••••" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => handleBlur('password')}
+              />
+              {touched.password && (
+                <span className={`validation-icon ${validations.password ? 'valid' : 'invalid'}`}>
+                  {validations.password ? '✓' : '✗'}
+                </span>
+              )}
+            </div>
+            {touched.password && !validations.password && (
+              <p className="error-text">Password is required</p>
+            )}
           </div>
 
-          <button type="submit" className="auth-btn">Sign In</button>
+          <button type="submit" className="auth-btn" disabled={!validations.email || !validations.password}>Sign In</button>
         </form>
 
         <p className="auth-footer-text">

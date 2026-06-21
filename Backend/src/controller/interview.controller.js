@@ -10,26 +10,46 @@ const interviewReportModel = require("../models/interview.report.model")
  */
 async function generateInterViewReportController(req, res) {
 console.log(req.file)
- try{    const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
-    const { selfDescription, jobDescription } = req.body
+    try {
+           const { selfDescription, jobDescription } = req.body
 
-    const interViewReportByAi = await generateInterviewReport({
-        resume: resumeContent.text,
-        selfDescription,
-        jobDescription
+        if (!jobDescription || (!req.file && !selfDescription)) {
+            return res.status(400).json({
+                message: "Job description and either resume or self-description are required."
+            })
+        }
+
+     let resumeText = ""
+        if (req.file) {
+            try {
+                const resumeContent = await pdfParse(req.file.buffer)
+                resumeText = resumeContent?.text || ""
+            } catch (pdfError) {
+          console.error("PDF parse failed:", pdfError)
+                if (!selfDescription) {
+                    return res.status(400).json({
+                        message: "Uploaded resume could not be parsed. Please upload a valid PDF file or provide a self-description."
+                    })
+                }
+                resumeText = ""
+            }
+        }
+        const interViewReportByAi = await generateInterviewReport({
+            resume: resumeText,
+            selfDescription,
+            jobDescription
     })
 
-    console.log("AI RESPONSE:", interViewReportByAi)
-   const interviewReport = await interviewReportModel.create({
-    user: req.user.id,
-    resume: resumeContent.text,
-    selfDescription,
-    jobDescription,
+     console.log("AI RESPONSE:", interViewReportByAi)
+        const interviewReport = await interviewReportModel.create({
+            user: req.user.id,
+            resume: resumeText,
+            selfDescription,
+            jobDescription,
+            title: interViewReportByAi?.position_applied || "Unknown Job",
+            ...interViewReportByAi
+        })
 
-    title: interViewReportByAi.position_applied || "Unknown Job",
-
-    ...interViewReportByAi
-})
 
     res.status(201).json({
         message: "Interview report generated successfully.",
@@ -37,9 +57,13 @@ console.log(req.file)
     })
 
  
-}catch(err){
+} catch(err) {
     console.log(err)
-    
+     const statusCode = err.status === 429 ? 429 : 500;
+    const message = err.status === 429 
+        ? "API quota exceeded. Free tier allows 20 requests/day. Please try again tomorrow or upgrade your plan."
+        : err.message || "Failed to generate interview report.";
+    res.status(statusCode).json({ message, error: err.message })
 }
 }
 /**
