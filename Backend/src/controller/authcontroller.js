@@ -43,7 +43,7 @@ async function registerUserController(req, res) {
         res.cookie("token", token, {
             httpOnly: true,
             sameSite: "none",
-            secure: false
+            secure: true
         });
         res.status(201).json({
             message: "New user has been created successfully",
