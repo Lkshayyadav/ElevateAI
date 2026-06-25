@@ -73,7 +73,18 @@ const Interview = () => {
     if (loading || !report) {
         return (
             <main className='loading-screen'>
-                <h1>Loading your interview plan...</h1>
+                <div className='loading-card'>
+                    <div className='loading-ring' />
+                    <div className='loading-copy'>
+                        <h1>Preparing your interview plan</h1>
+                        <p>Fetching your saved report from the server. This usually takes a few seconds.</p>
+                        <div className='loading-dots'>
+                            <span />
+                            <span />
+                            <span />
+                        </div>
+                    </div>
+                </div>
             </main>
         )
     }

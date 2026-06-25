@@ -22,7 +22,6 @@ export const useInterview = () => {
             response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
             setReport(response.interviewReport)
         } catch (error) {
-        console.error("Generate report failed:", error.response?.data || error.message || error)
             throw error
         } finally {
             setLoading(false)
@@ -36,8 +35,6 @@ export const useInterview = () => {
         try {
             response = await getInterviewReportById(interviewId)
             setReport(response.interviewReport)
-        } catch (error) {
-            console.log(error)
         } finally {
             setLoading(false)
         }
@@ -50,8 +47,6 @@ export const useInterview = () => {
         try {
             response = await getAllInterviewReports()
             setReports(response.interviewReports)
-        } catch (error) {
-            console.log(error)
         } finally {
             setLoading(false)
         }
@@ -70,9 +65,6 @@ export const useInterview = () => {
             link.setAttribute("download", `resume_${interviewReportId}.pdf`)
             document.body.appendChild(link)
             link.click()
-        }
-        catch (error) {
-            console.log(error)
         } finally {
             setLoading(false)
         }

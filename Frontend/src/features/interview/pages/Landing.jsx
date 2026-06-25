@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import '../styles/landing.scss';
+import '../styles/footer.scss';
+import DeveloperFooter from '../components/DeveloperFooter';
 
 
 export default function Landing() {
-  console.log("Landing rendered");
   const navigate = useNavigate();
-  
-  // Natively check system preference or previous setting, default to dark
+
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('prepai-theme') || 'dark';
+    return localStorage.getItem('elevate-ai-theme') || 'dark';
   });
 
   useEffect(() => {
-    localStorage.setItem('prepai-theme', theme);
+    localStorage.setItem('elevate-ai-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -39,13 +39,13 @@ return (
       {/* ── 1. STICKY TOP NAVIGATION WITH TOGGLE ── */}
       <nav className="landing-nav">
         <div className="logo">
-          <span className="logo-icon">🧬</span> PrepAI
+          <span className="logo-icon">🧬</span> Elevate-AI
         </div>
         
         <div className="nav-links">
           <a href="#features">Features</a>
           <a href="#workflow">How It Works</a>
-          <a href="https://github.com" target="_blank" rel="noreferrer">Open Source</a>
+          <a href="https://github.com/Lkshayyadav/ElevateAI/tree/master" target="_blank" rel="noreferrer">Open Source</a>
         </div>
         
         <div className="nav-actions">
@@ -81,7 +81,7 @@ return (
         <div className="hero-preview-wrapper">
           <div className="preview-top-bar">
             <div className="dots"><span/><span/><span/></div>
-            <div className="mock-url">prepai.dev/dashboard/home</div>
+            <div className="mock-url">elevate-ai.dev/dashboard/home</div>
           </div>
           <div className="preview-inner-grid">
             <div className="mock-sidebar">
@@ -149,9 +149,7 @@ return (
       </section>
 
       {/* ── 6. FOOTER ── */}
-      <footer className="developer-footer">
-        <p>© 2026 PrepAI System Lab. All rights reserved.</p>
-      </footer>
+      <DeveloperFooter />
     </div>
   );
 

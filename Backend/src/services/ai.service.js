@@ -40,9 +40,6 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
                         Job Description: ${jobDescription}
 `;
 
-    console.log("SCHEMA:");
-    console.dir(zodToJsonSchema(interviewReportSchema), { depth: null });
-
     const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: prompt,
@@ -52,10 +49,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         }
     });
 
-    console.log("RAW RESPONSE:");
-    console.log(response.text);
-
-      let parsed
+    let parsed;
     try {
         parsed = JSON.parse(response.text)
     } catch (parseError) {
@@ -63,9 +57,6 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         console.error("AI response text:", response.text)
         throw new Error("AI response could not be parsed as JSON. Check the model output or schema.")
     }
-
-    console.log("PARSED RESPONSE:");
-    console.dir(parsed, { depth: null });
 
     return parsed;
 }
@@ -113,23 +104,17 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                         The content should be ATS friendly, i.e. it should be easily parsable by ATS systems without losing important information.
                         The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
                     `
-console.log("SCHEMA:");
-console.dir(zodToJsonSchema(interviewReportSchema), { depth: null });
 
 const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: prompt,
     config: {
         responseMimeType: "application/json",
-       responseSchema: zodToJsonSchema(resumePdfSchema),
+        responseSchema: zodToJsonSchema(resumePdfSchema),
     }
 });
-console.log("GENERATE INTERVIEW REPORT CALLED");
-console.log("MODEL: gemini-3-flash-preview");
-console.log("SCHEMA TITLE EXISTS:", !!interviewReportSchema.shape.title);
 
-
-   const jsonContent = JSON.parse(response.text || "{}");
+    const jsonContent = JSON.parse(response.text || "{}");
 
     const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
 

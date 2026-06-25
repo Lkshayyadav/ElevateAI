@@ -5,8 +5,8 @@ import "../auth.form.scss";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { handelLogin } = useAuth();
-  const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
+  const { handleLogin } = useAuth();
+  const currentTheme = localStorage.getItem('elevate-ai-theme') || 'dark';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,7 +30,7 @@ export default function Login() {
       return;
     }
 
-    const success = await handelLogin({ email: email.trim().toLowerCase(), password });
+    const success = await handleLogin({ email: email.trim().toLowerCase(), password });
     if (success) {
       navigate('/home');
     }
@@ -49,10 +49,10 @@ export default function Login() {
           <div className="input-group">
             <label htmlFor="email">Email Address</label>
             <div className="input-wrapper">
-              <input 
+              <input
                 id="email"
-                type="email" 
-                placeholder="name@company.com" 
+                type="email"
+                placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onBlur={() => handleBlur('email')}
@@ -71,10 +71,10 @@ export default function Login() {
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <div className="input-wrapper">
-              <input 
+              <input
                 id="password"
-                type="password" 
-                placeholder="••••••••" 
+                type="password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={() => handleBlur('password')}

@@ -1,10 +1,11 @@
 import axios from "axios";
 
-
+const URL = import.meta.env.VITE_BACKEND_URL;
 
 export async function register(username, email, password) {
+    console.log(URL)
     try {
-        const response = await axios.post("http://localhost:3000/api/auth/register",
+        const response = await axios.post(`${URL}/api/auth/register`,
             {
                 username, email, password
             }, {
@@ -12,15 +13,19 @@ export async function register(username, email, password) {
         });
 
         return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
     }
-  catch (err) {
-    console.log("LOGIN ERROR:", err.response?.data);
-}
+
 }
 
 export async function login(email, password) {
+    console.log(`${URL}/api/auth/login`)
     try {
-        const response = await axios.post("http://localhost:3000/api/auth/login",
+        
+        const response = await axios.post(`${URL}/api/auth/login`,
+
             {
                 email, password
             }, {
@@ -28,40 +33,40 @@ export async function login(email, password) {
         });
 
         return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
     }
-   catch (err) {
-    console.log("LOGIN ERROR:", err.response?.data);
-}
 }
 
 
 export async function logout() {
     try {
-        const response = await axios.get("http://localhost:3000/api/auth/logout",
+        const response = await axios.get(`${URL}/api/auth/logout`,
             {
                 withCredentials: true
             });
 
         return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
     }
-   catch (err) {
-    console.log("LOGIN ERROR:", err.response?.data);
-}
 }
 
 
 export async function getMe() {
     try {
-        const response = await axios.get("http://localhost:3000/api/auth/get-me",
+        const response = await axios.get(`${URL}/api/auth/get-me`,
             {
                 withCredentials: true
             });
 
         return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
     }
-   catch (err) {
-    console.log("LOGIN ERROR:", err.response?.data);
-}
 }
 
 

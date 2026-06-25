@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInterview } from '../hook/useInterview.js'
+import DeveloperFooter from '../components/DeveloperFooter';
 // import { useAuth } from '../../auth/auth.context';
 
 import '../styles/home.scss';
@@ -8,22 +9,25 @@ import '../styles/home.scss';
 export default function Home() {
     const { loading, generateReport, reports } = useInterview()
     const navigate = useNavigate();
-    const resumeInputRef = useRef(null); // Reference for the hidden file input
-    const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
+    const resumeInputRef = useRef(null);
+    const currentTheme = localStorage.getItem('elevate-ai-theme') || 'dark';
 
     const [jobDescription, setJobDescription] = useState('');
     const [description, setDescription] = useState('');
-    const [fileName, setFileName] = useState(''); // To show the uploaded filename
-    const [error, setError] = useState(''); // Error state
+    const [fileName, setFileName] = useState('');
+    const [error, setError] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
 
-    const plans = [
-        { role: "Frontend Developer", date: "Generated on 6/20/2026", score: "88%" },
-        { role: "Frontend Developer", date: "Generated on 6/20/2026", score: "92%" },
-        { role: "Frontend Developer", date: "Generated on 6/20/2026", score: "92%" }
-    ];
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Unknown date';
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
 
-    // Logic for handling the generate button
     const handleGenerate = async () => {
         if (loading || isGenerating) return;
 
@@ -65,7 +69,7 @@ export default function Home() {
         <div className={`home-workspace-container theme-${currentTheme}`}>
             <header className="workspace-header">
                 <div className="brand" onClick={() => navigate('/')}>
-                    <span>🧬</span> PrepAI <span className="workspace-tag">Dashboard</span>
+                    <span>🧬</span> Elevate-AI <span className="workspace-tag">Dashboard</span>
                 </div>
                 <button className="btn-back-nav" onClick={() => navigate('/')}>
                     ← Back to Landing
@@ -105,7 +109,6 @@ export default function Home() {
                         <div className="form-block">
                             <label>Your Profile</label>
 
-                            {/* This div triggers the hidden input */}
                             <div className="upload-dropzone" onClick={() => resumeInputRef.current.click()}>
                                 <input
                                     type="file"
@@ -134,9 +137,9 @@ export default function Home() {
                             💡 Either a <strong>Resume</strong> or a <strong>Self-Description</strong> is required to generate a personalized plan.
                         </div>
 
-                        <button 
-                            type="button" 
-                            className="action-submit-btn" 
+                        <button
+                            type="button"
+                            className="action-submit-btn"
                             onClick={handleGenerate}
                             disabled={loading || isGenerating}
                         >
@@ -148,26 +151,33 @@ export default function Home() {
                 <aside className="history-panel">
                     <h2>My Recent Interview Plans</h2>
                     <div className="plans-list">
-                        {plans.map((plan, index) => (
-                            <div className="plan-item-card" key={index}>
-                                <div className="card-left">
-                                    <h3>{plan.role}</h3>
-                                    <span className="card-date">{plan.date}</span>
-                                </div>
-                                <div className="card-right">
-                                    <span className="score-badge">Match Score: {plan.score}</span>
-                                </div>
+                        {reports.length === 0 ? (
+                            <div className="empty-history">
+                                <p>No previous reports found.</p>
+                                <p>Generate your first plan to save it here.</p>
                             </div>
-                        ))}
+                        ) : (
+                            reports.map((reportItem) => (
+                                <button
+                                    key={reportItem._id}
+                                    className="plan-item-card"
+                                    onClick={() => navigate(`/interview/${reportItem._id}`)}
+                                >
+                                    <div className="card-left">
+                                        <h3>{reportItem.title || 'Interview Plan'}</h3>
+                                        <span className="card-date">Generated on {formatDate(reportItem.createdAt)}</span>
+                                    </div>
+                                    <div className="card-right">
+                                        <span className="score-badge">Match Score: {reportItem.matchScore ?? 'N/A'}%</span>
+                                    </div>
+                                </button>
+                            ))
+                        )}
                     </div>
                 </aside>
             </div>
 
-            <footer className="workspace-footer">
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#terms">Terms of Service</a>
-                <a href="#help">Help Center</a>
-            </footer>
+            <DeveloperFooter />
         </div>
     );
 }

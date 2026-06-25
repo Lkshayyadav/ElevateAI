@@ -1,7 +1,8 @@
 import axios from "axios";
 
+const URL = import.meta.env.VITE_BACKEND_URL;
 const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: URL,
     withCredentials: true,
 })
 
@@ -19,7 +20,6 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
     }
 
     const response = await api.post("/api/interview/", formData)
-    console.log(response.data)
     return response.data
 
 }

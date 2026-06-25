@@ -7,7 +7,7 @@ export default function Protected({ children }) {
 
   // Wait for session check to finish before redirecting
   if (loading) {
-    return <div style={{ color: 'white', padding: '2rem' }}>Loading...</div>;
+    return null;
   }
 
   if (!user) {

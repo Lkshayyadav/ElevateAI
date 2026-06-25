@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../auth.context";          // ✅ matches named export
+import { AuthContext } from "../auth.context";
 import { login, register, logout, getMe } from "../services/auth.api";
 
 export const useAuth = () => {
@@ -9,45 +9,43 @@ export const useAuth = () => {
         throw new Error("useAuth must be used inside AuthProvider");
     }
 
-    const { user, setUser, loading, setLoading } = context;  // ✅ now works, context exposes these
+    const { user, setUser, loading, setLoading } = context;
 
-    const handelLogin = async ({ email, password }) => {
+    const handleLogin = async ({ email, password }) => {
         try {
             setLoading(true);
             const response = await login(email, password);
             if (!response) return false;
             setUser(response.user);
             return true;
-        } catch (err) {
-            console.log(err);
+        } catch {
             return false;
         } finally {
             setLoading(false);
         }
     };
 
-    const handelRegister = async ({ username, email, password }) => {
-        try {
+    const handleRegister = async ({ username, email, password }) => {
+        try {   
             setLoading(true);
             const response = await register(username, email, password);
             if (!response) return false;
             setUser(response.user);
             return true;
-        } catch (err) {
-            console.log(err);
+        } catch {
             return false;
         } finally {
             setLoading(false);
         }
     };
 
-    const handelLogout = async () => {
+    const handleLogout = async () => {
         try {
             setLoading(true);
             await logout();
             setUser(null);
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.error(error);
         } finally {
             setLoading(false);
         }
@@ -67,5 +65,5 @@ export const useAuth = () => {
         getAndSetUser();
     }, []);
 
-    return { user, loading, handelLogin, handelRegister, handelLogout };
+    return { user, loading, handleLogin, handleRegister, handleLogout };
 };

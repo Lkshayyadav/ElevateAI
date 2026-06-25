@@ -4,7 +4,7 @@ export const AuthContext = createContext(null);        // ✅ named export so us
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('prepai_session');
+    const savedUser = localStorage.getItem('elevate-ai_session');
     return savedUser ? JSON.parse(savedUser) : null;
   });
 

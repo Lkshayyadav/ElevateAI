@@ -5,8 +5,8 @@ import "../auth.form.scss";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { handelRegister } = useAuth();
-  const currentTheme = localStorage.getItem('prepai-theme') || 'dark';
+  const { handleRegister } = useAuth();
+  const currentTheme = localStorage.getItem('elevate-ai-theme') || 'dark';
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -32,14 +32,14 @@ export default function Register() {
     setTouched(prev => ({ ...prev, [field]: true }));
   };
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validations.username || !validations.email || !validations.password) {
       setTouched({ username: true, email: true, password: true });
       return;
     }
 
-    const success = await handelRegister({ username: name.trim(), email: email.trim().toLowerCase(), password });
+    const success = await handleRegister({ username: name.trim(), email: email.trim().toLowerCase(), password });
     if (success) {
       navigate('/home');
     }
@@ -56,14 +56,14 @@ export default function Register() {
           <p className="auth-subtitle">Start tracking your preparation goals</p>
         </div>
 
-        <form className="auth-form" onSubmit={handleRegister}>
+        <form className="auth-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="fullname">Full Name</label>
             <div className="input-wrapper">
-              <input 
+              <input
                 id="fullname"
-                type="text" 
-                placeholder="Alex Kumar" 
+                type="text"
+                placeholder="Alex Kumar"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onBlur={() => handleBlur('username')}
@@ -82,10 +82,10 @@ export default function Register() {
           <div className="input-group">
             <label htmlFor="email">Email Address</label>
             <div className="input-wrapper">
-              <input 
+              <input
                 id="email"
-                type="email" 
-                placeholder="name@domain.com" 
+                type="email"
+                placeholder="name@domain.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onBlur={() => handleBlur('email')}
@@ -104,10 +104,10 @@ export default function Register() {
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <div className="input-wrapper">
-              <input 
+              <input
                 id="password"
-                type="password" 
-                placeholder="Create strong password" 
+                type="password"
+                placeholder="Create strong password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={() => handleBlur('password')}
@@ -120,7 +120,7 @@ export default function Register() {
             </div>
             <div className="password-strength">
               <div className="strength-bar">
-                <div 
+                <div
                   className={`strength-fill strength-${passwordStrength}`}
                   style={{ width: password.length < 8 ? '33%' : password.length <= 12 ? '66%' : '100%' }}
                 />

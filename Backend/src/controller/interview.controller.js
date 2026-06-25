@@ -9,9 +9,8 @@ const interviewReportModel = require("../models/interview.report.model")
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
-console.log(req.file)
     try {
-           const { selfDescription, jobDescription } = req.body
+        const { selfDescription, jobDescription } = req.body
 
         if (!jobDescription || (!req.file && !selfDescription)) {
             return res.status(400).json({
@@ -38,9 +37,8 @@ console.log(req.file)
             resume: resumeText,
             selfDescription,
             jobDescription
-    })
+        })
 
-     console.log("AI RESPONSE:", interViewReportByAi)
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
             resume: resumeText,
@@ -58,8 +56,8 @@ console.log(req.file)
 
  
 } catch(err) {
-    console.log(err)
-     const statusCode = err.status === 429 ? 429 : 500;
+    console.error(err)
+    const statusCode = err.status === 429 ? 429 : 500;
     const message = err.status === 429 
         ? "API quota exceeded. Free tier allows 20 requests/day. Please try again tomorrow or upgrade your plan."
         : err.message || "Failed to generate interview report.";
